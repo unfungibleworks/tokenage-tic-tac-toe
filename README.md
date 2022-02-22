@@ -1,5 +1,9 @@
 # Tokenage Tic Tac Toe
+
+## How to install
+
 ## Github
+
 ### During Development
 While developing, good practices are:
 
