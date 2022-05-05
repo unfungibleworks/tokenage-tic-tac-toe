@@ -34,7 +34,7 @@ public class SkinsController : MonoBehaviour
     [SerializeField]
     GameController gameController;
     [SerializeField]
-    TokensController coinController;
+    RewardsController coinController;
 
     [Header("Board")]
     [SerializeField]

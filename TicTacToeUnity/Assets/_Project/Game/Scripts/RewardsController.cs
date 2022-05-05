@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
+using Tokenage;
 
-public class TokensController : MonoBehaviour
+
+public class RewardsController : MonoBehaviour
 {
     //TODO Get the player tokens from the API
     [Header("Tokens")]
@@ -30,8 +34,11 @@ public class TokensController : MonoBehaviour
     //TODO Call the API to add the number of Tokens to the player account
     public void AddCoin(int amount)
     {
+        //Update the UI
         tokens += amount;
         tokensLabel.text = tokens.ToString();
+
+        Tokenage.TokenageManager.GetInstance().CUTILRewardRequest("",amount);
     }
 
     //TODO Call the API in order to collect a prize, the amount of tokens necessary should be subtracted and the prize revealed to be minted
@@ -63,9 +70,18 @@ public class TokensController : MonoBehaviour
         nftRewardImage.gameObject.SetActive(false);
     }
 
-    public void MintNFT()
+    public void RescueNFT()
     {
-        //TODO Load the MINT session inside the platform, after the mint, the skin should be available to be used inside the game
-        Application.OpenURL("http://unity3d.com/");
+        //TODO Get Mint Data
+        //Tokenage.TokenageManager.GetInstance().MintRequest();
     }
+
+    public void GetNFTs()
+    {
+        TokenageManager.GetInstance().UserNFTsRequest(AccountManager.GetInstance().Wallet, (bool loginSuccess) =>
+        {
+            Debug.Log("");
+        });
+    }
+
 }
