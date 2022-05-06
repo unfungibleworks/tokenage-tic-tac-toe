@@ -21,7 +21,12 @@ public class LoginController : MonoBehaviour
     [SerializeField]
     Text errorMessage;
 
+    [SerializeField]
+    Text errorMessageDetail;
+
     public string GameSceneName = "GameScene";
+
+
 
     struct Response
     {
@@ -47,14 +52,20 @@ public class LoginController : MonoBehaviour
         string email = emailInputField.text;
         string password = passwordInputField.text;
 
-        //TODO API call to validade email
-        //
-        //
-        Response tempResponse = new Response(true, "Login Success");
-        if (tempResponse.LoginSuccess)
+        Tokenage.TokenageManager.GetInstance().UserDataRequest(email,password,(bool loginSuccess) =>
+        {
+            HandleResponse(loginSuccess);
+        });
+    }
+
+    void HandleResponse(bool success)
+    {
+        if (success)
+        {
             LoadGame();
+        }
         else
-            ShowErrorMessage(tempResponse.ErrorMessage);
+            ShowErrorMessage("Login Failed");
     }
 
     public void CreateAccount()
@@ -72,6 +83,7 @@ public class LoginController : MonoBehaviour
     {
         errorMessage.gameObject.SetActive(true);
         errorMessage.text = message;
+        errorMessageDetail.text = "";
     }
 
 }

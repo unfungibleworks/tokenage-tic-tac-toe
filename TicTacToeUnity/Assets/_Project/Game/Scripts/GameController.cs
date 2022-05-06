@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     Text finishText;
     [SerializeField]
-    TokensController tokensController;
+    RewardsController tokensController;
 
     [HideInInspector]
     public bool CanInteractWithGame;
