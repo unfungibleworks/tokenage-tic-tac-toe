@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c9b546a2ca9ad4a82db1a48ede6b2b, type: 3}
+  m_Name: Comic Tile
+  m_EditorClassIdentifier: 
+  Id: 11
+  Name: Comic Tiles
+  Description: Comic tiles description
+  Image: https://demo.tokenage.io/resources/tic-tac-toe/skins/tile-skins/12.png
+  Category: Tile
+  Objects:
+  - {fileID: -7656541741795238875, guid: 9d361f807607c9b4588d13e01924e5eb, type: 3}
+  - {fileID: 6771243069604559848, guid: 9d361f807607c9b4588d13e01924e5eb, type: 3}
