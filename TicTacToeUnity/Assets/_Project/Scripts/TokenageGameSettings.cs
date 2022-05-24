@@ -17,6 +17,9 @@ class TokenageGameSettings : ScriptableObject
     [SerializeField]
     private string gameName;
 
+    [SerializeField]
+    private string ERC20Contract;
+
     internal static TokenageGameSettings GetOrCreateSettings()
     {
         var settings = AssetDatabase.LoadAssetAtPath<TokenageGameSettings>(tokenageGameSettingsPath);
@@ -25,6 +28,7 @@ class TokenageGameSettings : ScriptableObject
             settings = ScriptableObject.CreateInstance<TokenageGameSettings>();
             settings.gameId = 42;
             settings.gameName = "Tic Tac Toe";
+            settings.ERC20Contract = "";
             AssetDatabase.CreateAsset(settings, tokenageGameSettingsPath);
             AssetDatabase.SaveAssets();
         }
@@ -34,6 +38,21 @@ class TokenageGameSettings : ScriptableObject
     internal static SerializedObject GetSerializedSettings()
     {
         return new SerializedObject(GetOrCreateSettings());
+    }
+
+    public int ReturnGameID()
+    {
+        return gameId;
+    }
+
+    public string ReturnGameName()
+    {
+        return gameName;
+    }
+
+    public string ReturnERC20Contract()
+    {
+        return ERC20Contract;
     }
 }
 
@@ -55,11 +74,12 @@ static class MyCustomSettingsIMGUIRegister
                 var settings = TokenageGameSettings.GetSerializedSettings();
                 EditorGUILayout.PropertyField(settings.FindProperty("gameId"), new GUIContent("Game ID"));
                 EditorGUILayout.PropertyField(settings.FindProperty("gameName"), new GUIContent("Game Name"));
+                EditorGUILayout.PropertyField(settings.FindProperty("ERC20Contract"), new GUIContent("ERC20 Contract"));
                 settings.ApplyModifiedPropertiesWithoutUndo();
             },
 
             // Populate the search keywords to enable smart search filtering and label highlighting:
-            keywords = new HashSet<string>(new[] { "Name", "Id" })
+            keywords = new HashSet<string>(new[] { "Name", "Id", "Contract" })
         };
 
         return provider;

@@ -1,16 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Tokenage
 {
+    //This class is used to store information from smart contracts.
+    [Serializable]
     public class TokenRewardData
     {
+        public string id;
+        public string tokenId;
         public string name;
         public string description;
         public string image;
-        public string id;
-        public string tokenId;
+        public bool minted;
         public string owner;
         public string ownerName;
         public string contract;
@@ -21,7 +25,6 @@ namespace Tokenage
         public string comission;
         public string providerId;
         public string providerName;
-        public bool minted;
 
         public TokenRewardData(string _name, string _description, string _image, string _id,
             string _tokenId, string _owner, string _ownerName, string _contract,
