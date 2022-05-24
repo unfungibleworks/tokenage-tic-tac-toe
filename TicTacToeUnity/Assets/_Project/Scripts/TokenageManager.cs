@@ -28,12 +28,12 @@ namespace Tokenage
             StartCoroutine(GetUserNFTsRequest("https://api.tokenage.io/v1/users/" + AccountManager.GetInstance().Wallet + "/assets", callback,
                 (string returnValue) =>
                 {
-                    NFTManager.GetInstance().SetRewards(returnValue);
+                    if (returnValue != string.Empty) NFTManager.GetInstance().SetRewards(returnValue);
                 }));
             StartCoroutine(GetUserNFTsRequest("https://api.tokenage.io/v1/users/" + AccountManager.GetInstance().Wallet + "/nfts", callback,
                 (string returnValue) =>
                 {
-                    NFTManager.GetInstance().SetNFT(returnValue);
+                    if (returnValue != string.Empty) NFTManager.GetInstance().SetNFT(returnValue);
                 }));
         }
 
