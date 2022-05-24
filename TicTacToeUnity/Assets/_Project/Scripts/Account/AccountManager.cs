@@ -19,5 +19,9 @@ public class AccountManager
     public void SetUser(string data)
     {
         userData = JsonUtility.FromJson<UserData>(data);
+
+        Name = userData.name;
+        Email = userData.email;
+        Wallet = userData.wallet;
     }
 }
