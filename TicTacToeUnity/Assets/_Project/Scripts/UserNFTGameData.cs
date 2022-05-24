@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Tokenage
 {
+    //This class is used to store data from the user.
+    [Serializable]
     public class UserNFTGameData
     {
         public string name;

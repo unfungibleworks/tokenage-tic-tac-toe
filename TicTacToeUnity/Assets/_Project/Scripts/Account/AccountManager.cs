@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+//This class is used to store data from the user.
 public class AccountManager
 {
     static AccountManager instance;
     private UserData userData;
-    public string Name => userData!=null ? userData.name : "John Seller";
-    public string Email => userData != null ? userData.email : "john.seller@mailinator.com";
-    public string Wallet => userData != null ? userData.wallet : "";
+    public string Name;
+    public string Email;
+    public string Wallet;
 
     public static AccountManager GetInstance()
     {

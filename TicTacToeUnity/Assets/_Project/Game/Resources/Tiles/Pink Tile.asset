@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c9b546a2ca9ad4a82db1a48ede6b2b, type: 3}
+  m_Name: Pink Tile
+  m_EditorClassIdentifier: 
+  Id: 2
+  Name: Pink Tiles
+  Description: Pink tiles description
+  Image: https://demo.tokenage.io/resources/tic-tac-toe/skins/tile-skins/8X.png
+  Category: Tile
+  Objects:
+  - {fileID: 21300000, guid: 3daebb119cb7fa14094f84b1c6ec4cad, type: 3}
+  - {fileID: 21300000, guid: 429e8ff3823f5c648876d21cf2ff7319, type: 3}

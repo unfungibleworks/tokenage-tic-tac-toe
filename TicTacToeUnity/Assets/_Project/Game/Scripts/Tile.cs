@@ -35,12 +35,12 @@ public class Tile : MonoBehaviour
         thisImage.color = Color.white;
         if (isX)
         {
-            thisImage.sprite = skinsController.CurrentTileSkin.xSprite;
+            thisImage.sprite = skinsController.CurrentTileSkin.Objects[0] as Sprite;
             IsFilledX = true;
         }
         else
         {
-            thisImage.sprite = skinsController.CurrentTileSkin.oSprite;
+            thisImage.sprite = skinsController.CurrentTileSkin.Objects[1] as Sprite;
             IsFilledY = true;
         }
     }

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c9b546a2ca9ad4a82db1a48ede6b2b, type: 3}
+  m_Name: Default Tile
+  m_EditorClassIdentifier: 
+  Id: 0
+  Name: Default Tiles
+  Description: Default tile description
+  Image: https://demo.tokenage.io/resources/tic-tac-toe/skins/tile-skins/X.png
+  Category: Tile
+  Objects:
+  - {fileID: 21300000, guid: 83cbd587502097042bf8c6df1a5847cf, type: 3}
+  - {fileID: 21300000, guid: e580068a44ef22d40a9ded1f003eaec0, type: 3}

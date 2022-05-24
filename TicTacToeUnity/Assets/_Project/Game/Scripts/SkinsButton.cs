@@ -11,9 +11,12 @@ public class SkinsButton : MonoBehaviour
     [SerializeField]
     SkinsController skinsPanel;
 
-    public void TogglePanel()
+    public void ToggleInventoryPanel()
     {        
-        skinsPanel.ToggleSkinsPanel();
+        skinsPanel.ToggleSkinsInventory();
     }
-
+    public void ToggleShopPanel()
+    {
+        skinsPanel.ToggleSkinsShop();
+    }
 }

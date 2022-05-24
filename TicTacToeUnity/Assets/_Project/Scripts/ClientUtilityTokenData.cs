@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Tokenage
 {
+    //This class is used to struct information to post (erc20 contract)
     public class ClientUtilityTokenData
     {
         public string playerEmail;

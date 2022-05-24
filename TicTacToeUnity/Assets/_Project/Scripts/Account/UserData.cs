@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class UserData
 {
+    //This class is used to store data from the user.
     public string id;
     public string wallet;
     public string name;
