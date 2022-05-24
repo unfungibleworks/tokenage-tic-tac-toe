@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Tokenage
 {
+    //This class is used to struct data to post the collection value.
     public class MintData
     {
         public string playerEmail;

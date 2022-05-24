@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Tokenage
 {
+    //This class stores information from smart contracts.
+    [Serializable]
     public class TokenData
     {
         public string name;

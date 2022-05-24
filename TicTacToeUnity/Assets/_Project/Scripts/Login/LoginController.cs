@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//This class is used to recive input data and send the player to the correct scene if success.
 public class LoginController : MonoBehaviour
 {
     [SerializeField]
@@ -70,7 +69,6 @@ public class LoginController : MonoBehaviour
 
     public void CreateAccount()
     {
-        //TODO Get the correct URL to create an Account inside the platform
         Application.OpenURL("http://unity3d.com/");
     }
 
