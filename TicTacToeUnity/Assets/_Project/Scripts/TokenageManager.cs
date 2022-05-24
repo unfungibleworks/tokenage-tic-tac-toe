@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 
 namespace Tokenage
 {
+    //This class is used to send and get information from the API.
     public class TokenageManager : MonoBehaviour
     {
         static TokenageManager instance;
@@ -22,12 +23,21 @@ namespace Tokenage
         }
 
         #region Get Requests
-        public void UserDataRequest(string email, string password, Action<bool> callback)
+        public void UserNFTsRequest(Action<bool> callback)
         {
-            StartCoroutine(GetUserDataRequest("https://api.tokenage.io/v1/users/email/" + email, callback));           
+            StartCoroutine(GetUserNFTsRequest("https://api.tokenage.io/v1/users/" + AccountManager.GetInstance().Wallet + "/assets", callback,
+                (string returnValue) =>
+                {
+                    NFTManager.GetInstance().SetRewards(returnValue);
+                }));
+            StartCoroutine(GetUserNFTsRequest("https://api.tokenage.io/v1/users/" + AccountManager.GetInstance().Wallet + "/nfts", callback,
+                (string returnValue) =>
+                {
+                    NFTManager.GetInstance().SetNFT(returnValue);
+                }));
         }
 
-        IEnumerator GetUserDataRequest(string url, Action<bool> callback)
+        IEnumerator GetUserNFTsRequest(string url, Action<bool> callback, Action<string> value)
         {
             var request = new UnityWebRequest(url, "Get");
             request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
@@ -37,32 +47,15 @@ namespace Tokenage
             Debug.Log("Result: " + request.result);
             Debug.Log("Status Code: " + request.responseCode);
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+            {
                 callback(false);
+                value(string.Empty);
+            }
             else if (request.result == UnityWebRequest.Result.Success)
             {
-                AccountManager.GetInstance().SetUser(request.downloadHandler.text);
                 callback(true);
+                value(request.downloadHandler.text);
             }
-        }
-
-        public void UserNFTsRequest(string wallet, Action<bool> callback)
-        {
-            StartCoroutine(GetUserNFTsRequest("https://api.tokenage.io/v1/users/" + wallet + "/nfts", callback));
-        }
-
-        IEnumerator GetUserNFTsRequest(string url, Action<bool> callback)
-        {
-            var request = new UnityWebRequest(url, "Get");
-            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-            yield return request.SendWebRequest();
-
-            Debug.Log("Result: " + request.result);
-            Debug.Log("Status Code: " + request.responseCode);
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-                callback(false);
-            else if (request.result == UnityWebRequest.Result.Success)            
-                callback(true);            
         }
 
         #endregion
@@ -84,12 +77,11 @@ namespace Tokenage
             StartCoroutine(PostRequest(bodyJsonString, "https://api.tokenage.io/v1/assets"));
         }
 
-        public void CUTILRewardRequest(string contract, int amount)
+        public void CUTILRewardRequest(int amount)
         {
-            //TODO Get Contract from somewhere for the tokens
             ClientUtilityTokenData data = new ClientUtilityTokenData(
                 AccountManager.GetInstance().Email,
-                contract,
+                TokenageGameSettings.GetOrCreateSettings().ReturnERC20Contract(),
                 amount.ToString());
 
             string bodyJsonString = JsonUtility.ToJson(data);
@@ -107,6 +99,34 @@ namespace Tokenage
             yield return request.SendWebRequest();
             Debug.Log("Result: " + request.result);
             Debug.Log("Status Code: " + request.responseCode);
+        }
+
+        public void UserDataRequest(string email, string password, Action<bool> callback)
+        {
+            LoginData data = new LoginData(email, password);
+
+            string bodyJsonString = JsonUtility.ToJson(data);
+
+            StartCoroutine(GetUserDataRequest(bodyJsonString, "https://api.tokenage.io/v1/users/login", callback));
+        }
+
+        IEnumerator GetUserDataRequest(string data, string url, Action<bool> callback)
+        {
+            var request = new UnityWebRequest(url, "POST");
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(data);
+            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+            yield return request.SendWebRequest();
+            Debug.Log("Result: " + request.result);
+            Debug.Log("Status Code: " + request.responseCode);
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+                callback(false);
+            else if (request.result == UnityWebRequest.Result.Success)
+            {
+                AccountManager.GetInstance().SetUser(request.downloadHandler.text);
+                callback(true);
+            }
         }
         #endregion
     }
