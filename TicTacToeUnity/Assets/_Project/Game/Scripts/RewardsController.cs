@@ -9,7 +9,6 @@ using Tokenage;
 
 public class RewardsController : MonoBehaviour
 {
-    //TODO Get the player tokens from the API
     [Header("Tokens")]
     public int tokens;
 
@@ -29,59 +28,41 @@ public class RewardsController : MonoBehaviour
     {            
         tokensLabel.text = tokens.ToString();
         nftRewardImage.gameObject.SetActive(false);
+        GetNFTs();
     }
 
-    //TODO Call the API to add the number of Tokens to the player account
     public void AddCoin(int amount)
     {
         //Update the UI
         tokens += amount;
         tokensLabel.text = tokens.ToString();
-
-        Tokenage.TokenageManager.GetInstance().CUTILRewardRequest("",amount);
     }
 
-    //TODO Call the API in order to collect a prize, the amount of tokens necessary should be subtracted and the prize revealed to be minted
-    public void CollectPrize()
+    public static void RescueNFT(CollectionItem item)
     {
-        if (tokens - nftTokenCost >= 0)
-        {
-            tokens -= nftTokenCost;
-            tokensLabel.text = tokens.ToString();
-            ShowPrize();
-        }
-        else
-        {
-            Debug.Log("Not enough coins!");
-        }
-    }
-
-    //TODO Show the player the NFT he needs to mint
-    void ShowPrize()
-    {
-        nftRewardImage.gameObject.SetActive(true);
-        //nftRewardImage.sprite = 
-        //skinsController.GetRandomSkin();
-        Invoke("HidePrize", 10);
-    }
-
-    void HidePrize()
-    {
-        nftRewardImage.gameObject.SetActive(false);
-    }
-
-    public void RescueNFT()
-    {
-        //TODO Get Mint Data
-        //Tokenage.TokenageManager.GetInstance().MintRequest();
+        Tokenage.TokenageManager.GetInstance().MintRequest(
+            item.contract,
+             item.Id,
+             item.Name,
+             item.Description,
+             item.Image,
+             item.Category
+            );
     }
 
     public void GetNFTs()
     {
-        TokenageManager.GetInstance().UserNFTsRequest(AccountManager.GetInstance().Wallet, (bool loginSuccess) =>
+        TokenageManager.GetInstance().UserNFTsRequest((bool loginSuccess) =>
         {
-            Debug.Log("");
+
         });
+    }
+
+    public void RescueCoins()
+    {
+        Tokenage.TokenageManager.GetInstance().CUTILRewardRequest(tokens);
+        tokens = 0;
+        tokensLabel.text = tokens.ToString();
     }
 
 }

@@ -2,33 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Tokenage;
 
 public class SkinsController : MonoBehaviour
 {
     [Header("Tile Skins")]
-    public List<Skin> possibleTileSkins;
-    //TODO the API should return to the game the owned skins of the player
-    private List<Skin> ownedTileSkins;
+    public Collection possibleTileSkins;
+    public List<CollectionItem> storeTileSkins;
+    private List<CollectionItem> ownedTileSkins;
 
     [Header("Board Skins")]
-    public List<Sprite> possibleBoardSkins;
-    //TODO the API should return to the game the owned board skins of the player
-    private List<Sprite> ownedBoardSkins;
+    public Collection possibleBoardSkins;
+    private List<CollectionItem> storeBoardSkins;
+    private List<CollectionItem> ownedBoardSkins;
 
     [Header("Prefabs")]
     [SerializeField]
     GameObject skinSelectPrefab;
     [SerializeField]
+    GameObject skinBuyPrefab;
+    [SerializeField]
     GameObject boardSkinSelectPrefab;
+    [SerializeField]
+    GameObject boardSkinBuyPrefab;
 
     [HideInInspector] 
-    public Skin CurrentTileSkin;
+    public CollectionItem CurrentTileSkin;
 
     [Header("Skins Containers")]
     [SerializeField]
-    GameObject tileSkinsBox;
+    GameObject tileInventoryBox;
     [SerializeField]
-    GameObject boardSkinsBox;
+    GameObject boardInventoryBox;
+    [SerializeField]
+    GameObject tileShopBox;
+    [SerializeField]
+    GameObject boardShopBox;
 
     [Header("Controllers")]
     [SerializeField]
@@ -42,103 +51,177 @@ public class SkinsController : MonoBehaviour
 
     [Header("Panel")]
     [SerializeField]
-    GameObject panel;
+    GameObject inventory;
+    [SerializeField]
+    GameObject shop;
+    [SerializeField]
+    GameObject splash;
 
     private void Awake()
-    {        
-        ownedTileSkins = new List<Skin>();
-        ownedTileSkins.Add(possibleTileSkins[0]);
-        CurrentTileSkin = possibleTileSkins[0];
-        possibleTileSkins.RemoveAt(0);
+    {
+        possibleBoardSkins.InitializeCollection();
+        possibleTileSkins.InitializeCollection();
 
-        ownedBoardSkins = new List<Sprite>();
-        ownedBoardSkins.Add(possibleBoardSkins[0]);
-        possibleBoardSkins.RemoveAt(0);
+        storeBoardSkins = new List<CollectionItem>();
+        for (int i = 0; i < possibleBoardSkins.Items.Count; i++)
+        {
+            storeBoardSkins.Add(possibleBoardSkins.Items[i]);
+        }
 
-        panel.SetActive(false);
+        storeTileSkins = new List<CollectionItem>();
+        for (int i = 0; i < possibleTileSkins.Items.Count; i++)
+        {
+            storeTileSkins.Add(possibleTileSkins.Items[i]);
+        }
+
+        ownedTileSkins = new List<CollectionItem>();
+        ownedTileSkins.Add(possibleTileSkins.Items[0]);
+        CurrentTileSkin = possibleTileSkins.Items[0];
+        storeTileSkins.RemoveAt(0);
+
+        ownedBoardSkins = new List<CollectionItem>();
+        ownedBoardSkins.Add(possibleBoardSkins.Items[0]);
+        storeBoardSkins.RemoveAt(0);
+
+        inventory.SetActive(false);
+        shop.SetActive(false);
+        NFTManager.GetInstance().updateNFTs += UpdateInventoryFromOnlineRequest;
     }
 
-    public void ToggleSkinsPanel()
+    public void UpdateInventoryFromOnlineRequest()
     {
-        if (!panel.activeInHierarchy)
+        List<Collection> collections = new List<Collection>();
+        collections.Add(possibleBoardSkins);
+        collections.Add(possibleTileSkins);
+
+        List<List<CollectionItem>> collectionItems;
+        collectionItems = NFTManager.GetInstance().ReturnOnlineCollectionItensByLocalCollections(collections);
+
+        for (int i = 0; i < collectionItems[0].Count; i++)
         {
-            panel.SetActive(true);
+            storeBoardSkins.Remove(collectionItems[0][i]);
+            ownedBoardSkins.Add(collectionItems[0][i]);
+        }
+
+        for (int i = 0; i < collectionItems[1].Count; i++)
+        {
+            storeTileSkins.Remove(collectionItems[1][i]);
+            ownedTileSkins.Add(collectionItems[1][i]);
+        }
+
+        splash.SetActive(false);
+    }
+
+    public void ToggleSkinsInventory()
+    {
+        if (!inventory.activeInHierarchy)
+        {
+            if (shop.activeInHierarchy) shop.SetActive(false);
+            inventory.SetActive(true);
             gameController.CanInteractWithGame = false;
-            RefreshSkins();
+            RefreshSkins(true);
         }
         else
         {
-            panel.SetActive(false);
+            inventory.SetActive(false);
             gameController.CanInteractWithGame = true;
         }
     }
 
-    //public void GetRandomSkin()
-    //{
-    //    if (possibleTileSkins.Count > 0 || possibleBoardSkins.Count > 0)
-    //    {
-    //        int sortingNumber = Random.Range(0, possibleTileSkins.Count + possibleBoardSkins.Count);
-
-    //        if (sortingNumber < possibleTileSkins.Count)
-    //        {
-    //            ownedTileSkins.Add(possibleTileSkins[sortingNumber]);
-    //            possibleTileSkins.RemoveAt(sortingNumber);
-    //        }
-    //        else if (sortingNumber >= possibleTileSkins.Count)
-    //        {
-    //            ownedBoardSkins.Add(possibleBoardSkins[sortingNumber - possibleTileSkins.Count]);
-    //            possibleBoardSkins.RemoveAt(sortingNumber - possibleTileSkins.Count);
-    //        }
-
-    //        coinController.chestTextFeedback.color = Color.green;
-    //        coinController.chestTextFeedback.text = "You got a new skin!";
-    //        coinController.StartCoroutine(coinController.RunChestText());            
-    //    }
-    //    else
-    //    {
-    //        coinController.AddCoin(coinController.chestPrice);
-    //        coinController.chestTextFeedback.color = Color.red;
-    //        coinController.chestTextFeedback.text = "You already have all the skins!";
-    //        coinController.StartCoroutine(coinController.RunChestText());
-    //        Debug.Log("You already have all the skins!");
-    //    }
-    //}
-
-
-    //TODO Get the owned skins from the API
-    private void RefreshSkins()
+    public void ToggleSkinsShop()
     {
-        if (ownedTileSkins.Count >= tileSkinsBox.transform.childCount)        
-            RefreshTileSkins();
-
-        if (ownedBoardSkins.Count >= boardSkinsBox.transform.childCount)
-            RefreshBoardSkins();
+        if (!shop.activeInHierarchy)
+        {
+            if (inventory.activeInHierarchy) inventory.SetActive(false);
+            shop.SetActive(true);
+            gameController.CanInteractWithGame = false;
+            RefreshSkins(false);
+        }
+        else
+        {
+            shop.SetActive(false);
+            gameController.CanInteractWithGame = true;
+        }
     }
 
-    void RefreshTileSkins()
+    private void RefreshSkins(bool isFromInventory)
+    {
+        if (isFromInventory)
+        {
+            if (ownedTileSkins.Count >= tileInventoryBox.transform.childCount)
+                RefreshTileSkins(isFromInventory);
+
+            if (ownedBoardSkins.Count >= boardInventoryBox.transform.childCount)
+                RefreshBoardSkins(isFromInventory);
+        }
+        else
+        {
+            if (ownedTileSkins.Count >= tileShopBox.transform.childCount)
+                RefreshTileSkins(isFromInventory);
+
+            if (ownedBoardSkins.Count >= boardShopBox.transform.childCount)
+                RefreshBoardSkins(isFromInventory);
+        }
+    }
+
+    void RefreshTileSkins(bool isFromInventory)
     {
         GameObject newSkinSelect;
-        for (int i = tileSkinsBox.transform.childCount; i < ownedTileSkins.Count; i++)
+        if (isFromInventory)
         {
-            newSkinSelect = Instantiate(skinSelectPrefab, tileSkinsBox.transform);
-            newSkinSelect.GetComponent<SkinSelect>().SetSkin(ownedTileSkins[i], this);
+            for (int i = tileInventoryBox.transform.childCount; i < ownedTileSkins.Count; i++)
+            {
+                newSkinSelect = Instantiate(skinSelectPrefab, tileInventoryBox.transform);
+                newSkinSelect.GetComponent<SkinSelect>().SetSkin(ownedTileSkins[i], this);
+            }
+        }
+        else
+        {
+            for (int i = tileShopBox.transform.childCount; i < storeTileSkins.Count; i++)
+            {
+                newSkinSelect = Instantiate(skinBuyPrefab, tileShopBox.transform);
+                newSkinSelect.GetComponent<SkinSelect>().SetSkin(storeTileSkins[i], this);
+            }
         }
     }
 
-    void RefreshBoardSkins()
+    void RefreshBoardSkins(bool isFromInventory)
     {
         GameObject newBoardSkinSelect;
-        for (int i = boardSkinsBox.transform.childCount; i < ownedBoardSkins.Count; i++)
+        if (isFromInventory)
         {
-            newBoardSkinSelect = Instantiate(boardSkinSelectPrefab, boardSkinsBox.transform);
-            newBoardSkinSelect.GetComponent<BoardSkinSelect>().SetBoardSkin(ownedBoardSkins[i], this);
+            for (int i = boardInventoryBox.transform.childCount; i < ownedBoardSkins.Count; i++)
+            {
+                newBoardSkinSelect = Instantiate(boardSkinSelectPrefab, boardInventoryBox.transform);
+                newBoardSkinSelect.GetComponent<BoardSkinSelect>().SetBoardSkin(ownedBoardSkins[i], this);
+            }
+        }
+        else
+        {
+            for (int i = boardShopBox.transform.childCount; i < storeBoardSkins.Count; i++)
+            {
+                newBoardSkinSelect = Instantiate(boardSkinBuyPrefab, boardShopBox.transform);
+                newBoardSkinSelect.GetComponent<BoardSkinSelect>().SetBoardSkin(storeBoardSkins[i], this);
+            }
         }
     }
-}
 
-[System.Serializable]
-public class Skin
-{
-    public Sprite xSprite;
-    public Sprite oSprite;
+    public void BuyBoard(CollectionItem _boardSprite)
+    {
+        RewardsController.RescueNFT(_boardSprite);
+        storeBoardSkins.Remove(_boardSprite);
+        ownedBoardSkins.Add(_boardSprite);
+    }
+
+    public void BuySkin(CollectionItem _skin)
+    {
+        RewardsController.RescueNFT(_skin);
+        storeTileSkins.Remove(_skin);
+        ownedTileSkins.Add(_skin);
+    }
+
+    private void OnDestroy()
+    {
+        NFTManager.GetInstance().updateNFTs -= UpdateInventoryFromOnlineRequest;
+    }
 }
