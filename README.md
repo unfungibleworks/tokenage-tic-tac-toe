@@ -2,6 +2,12 @@
 
 ## How to install
 
+- Download and install Unity Hub from https://unity3d.com/pt/get-unity/download
+
+- Search for the Unity version 2020.3.19f1 from https://unity3d.com/pt/get-unity/download/archive and install through the Unity Hub option.
+
+- Clone the repository and add the directory in Unity Hub.
+
 ## Github
 
 ### During Development
