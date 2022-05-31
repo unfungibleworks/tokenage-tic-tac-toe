@@ -206,30 +206,18 @@ public class SkinsController : MonoBehaviour
         }
     }
 
-    public bool BuyBoard(CollectionItem _boardSprite)
+    public void BuyBoard(CollectionItem _boardSprite)
     {
-        if (coinController.tokens >= coinController.nftTokenCost)
-        {
-            RewardsController.RescueNFT(_boardSprite);
-            storeBoardSkins.Remove(_boardSprite);
-            ownedBoardSkins.Add(_boardSprite);
-            coinController.tokens -= coinController.nftTokenCost;
-            return true;
-        }
-        return false;
+        RewardsController.RescueNFT(_boardSprite);
+        storeBoardSkins.Remove(_boardSprite);
+        ownedBoardSkins.Add(_boardSprite);
     }
 
-    public bool BuySkin(CollectionItem _skin)
+    public void BuySkin(CollectionItem _skin)
     {
-        if (coinController.tokens >= coinController.nftTokenCost)
-        {
-            RewardsController.RescueNFT(_skin);
-            storeTileSkins.Remove(_skin);
-            ownedTileSkins.Add(_skin);
-            coinController.tokens -= coinController.nftTokenCost;
-            return true;
-        }
-        return false;
+        RewardsController.RescueNFT(_skin);
+        storeTileSkins.Remove(_skin);
+        ownedTileSkins.Add(_skin);
     }
 
     private void OnDestroy()
