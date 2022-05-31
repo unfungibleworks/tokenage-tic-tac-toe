@@ -26,7 +26,6 @@ public class BoardSkinSelect : MonoBehaviour
 
     public void BuySkin()
     {
-        skinsController.BuyBoard(boardSkin);
-        Destroy(gameObject);
+        if (skinsController.BuyBoard(boardSkin)) Destroy(gameObject);
     }
 }
