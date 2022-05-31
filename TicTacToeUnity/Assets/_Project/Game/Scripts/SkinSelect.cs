@@ -37,6 +37,7 @@ public class SkinSelect : MonoBehaviour
 
     public void BuySkin()
     {
-        if (skinsController.BuySkin(mySkin)) Destroy(gameObject);
+        skinsController.BuySkin(mySkin);
+        Destroy(gameObject);
     }
 }
