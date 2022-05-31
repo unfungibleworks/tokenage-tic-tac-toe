@@ -1,3 +1,4 @@
+using UnityEngine;
 using System.Collections.Generic;
 
 namespace Tokenage
@@ -34,43 +35,77 @@ namespace Tokenage
             string newData = UnwrapJson(data);
             var root = JSON.Parse(newData);
 
-            string newContracts = UnwrapJson(root["erc721Contracts"].ToString());
-            string[] contractArray = ReturnArrayJson(newContracts);
-            ContractData[] contractsData = new ContractData[contractArray.Length];
-
-            for (int i = 0; i < contractArray.Length; i++)
+            if (root == null)
             {
-                var contract = JSON.Parse(contractArray[i]);
-                contractsData[i] = new ContractData(
-                    contract["symbol"],
-                    contract["friendlyName"],
-                    contract["name"],
-                    contract["adress"],
+                userNFT = new UserNFTGameData(null,
                     null,
-                    contract["image"],
-                    contract["id"],
-                    contract["category"],
-                    contract["attributes"],
-                    contract["tokenId"],
-                    contract["owner"],
-                    contract["ownerName"],
-                    contract["contract"],
-                    contract["contractName"],
-                    contract["contractFriendlyName"],
-                    contract["gameId"],
-                    contract["gameName"],
-                    contract["commission"],
-                    contract["providerId"],
-                    contract["providerName"],
-                    contract["minted"]
+                    null,
+                    null
                     );
             }
-            userNFT = new UserNFTGameData(root["name"],
-                root["comission"], 
-                root["provider"],
-                contractsData
-                );
+            else
+            {
+                ContractData[] contractsData = null;
 
+                if (root["erc721Contracts"] != null)
+                {
+                    string newContracts = UnwrapJson(root["erc721Contracts"].ToString());
+                    string[] contractArray = ReturnArrayJson(newContracts);
+                    contractsData = new ContractData[contractArray.Length];
+
+                    for (int i = 0; i < contractArray.Length; i++)
+                    {
+                        TokenData[] tokenData = null;
+
+                        var contract = JSON.Parse(contractArray[i]);
+
+                        if (contract["nfts"] != null)
+                        {
+                            string newTokenRewards = UnwrapJson(contract["nfts"].ToString());
+                            string[] tokenArray = ReturnArrayJson(newTokenRewards);
+                            tokenData = new TokenData[tokenArray.Length];
+
+                            for (int r = 0; r < tokenArray.Length; r++)
+                            {
+                                var token = JSON.Parse(tokenArray[r]);
+
+                                tokenData[r] = new TokenData(token["name"],
+                                    token["description"],
+                                    token["image"],
+                                    token["id"],
+                                    token["category"],
+                                    null,
+                                    token["tokenId"],
+                                    token["owner"],
+                                    token["ownerName"],
+                                    token["contract"],
+                                    token["contractName"],
+                                    token["contractFriendlyName"],
+                                    token["gameId"],
+                                    token["gameName"],
+                                    token["commission"],
+                                    token["providerId"],
+                                    token["providerName"],
+                                    token["minted"]
+                                    );
+                            }
+                        }
+
+                        contractsData[i] = new ContractData(
+                            contract["symbol"],
+                            contract["friendlyName"],
+                            contract["name"],
+                            contract["address"],
+                            tokenData
+                            );
+                    }
+                }
+                userNFT = new UserNFTGameData(root["name"],
+                    root["comission"],
+                    root["provider"],
+                    contractsData
+                    );
+            }
             hasNFTUpdated = true;
             CheckIfBothObjectsWereUpdated();
         }
@@ -127,89 +162,118 @@ namespace Tokenage
             string newData = UnwrapJson(data);
             var root = JSON.Parse(newData);
 
-            string new721Contracts = UnwrapJson(root["erc721Contracts"].ToString());
-            string[] contractArray721 = ReturnArrayJson(new721Contracts);
-            Erc721ContractsData[] erc721 = new Erc721ContractsData[contractArray721.Length];
-            string new20Contracts = UnwrapJson(root["erc20Contracts"].ToString());
-            string[] contractArray20 = ReturnArrayJson(new20Contracts);
-            Erc20ContractsData[] erc20 = new Erc20ContractsData[contractArray20.Length];
-
-            for (int i = 0; i < contractArray721.Length; i++)
+            if (root == null)
             {
-                var contract = JSON.Parse(contractArray721[i]);
-
-                string newTokenRewards = UnwrapJson(contract["nfts"].ToString());
-                string[] tokenArray = ReturnArrayJson(newTokenRewards);
-                TokenRewardData[] tokenRewards = new TokenRewardData[tokenArray.Length];
-
-                for (int r = 0; r < tokenArray.Length; r++)
-                {
-                    var token = JSON.Parse(tokenArray[r]);
-
-                    tokenRewards[r] = new TokenRewardData(token["name"], 
-                        token["description"], 
-                        token["image"],
-                        token["id"],
-                        token["tokenId"],
-                        token["owner"],
-                        token["ownerName"],
-                        token["contract"],
-                        token["contractName"],
-                        token["contractFriendlyName"],
-                        token["gameId"],
-                        token["gameName"],
-                        token["comission"],
-                        token["providerId"],
-                        token["providerName"],
-                        token["minted"]
-                        );
-                }
-
-                erc721[i] = new Erc721ContractsData(contract["symbol"],
-                    contract["friendlyName"],
-                    contract["name"],
-                    contract["address"],
-                    tokenRewards
+                userRewards = new UserNotMintedData(null,
+                    null,
+                    null,
+                    null,
+                    null
                     );
             }
-
-            for (int i = 0; i < contractArray20.Length; i++)
+            else
             {
-                var contract = JSON.Parse(contractArray20[i]);
+                Erc721ContractsData[] erc721 = null;
+                Erc20ContractsData[] erc20 = null;
 
-                string newToken = UnwrapJson(contract["token"].ToString());
-                string[] tokenArray = ReturnArrayJson(newToken);
-                Erc20Token[] tokenData = new Erc20Token[tokenArray.Length];
-
-                for (int r = 0; r < tokenArray.Length; r++)
+                if (root["erc721Contracts"] != null)
                 {
-                    var token = JSON.Parse(tokenArray[r]);
+                    string new721Contracts = UnwrapJson(root["erc721Contracts"].ToString());
+                    string[] contractArray721 = ReturnArrayJson(new721Contracts);
+                    erc721 = new Erc721ContractsData[contractArray721.Length];
 
-                    tokenData[r] = new Erc20Token(token["contractId"],
-                        token["userId"],
-                        token["value"],
-                        token["sequence"],
-                        token["canClaim"],
-                        token["pendingValue"],
-                        token["pendingSequence"]
-                        );
+                    for (int i = 0; i < contractArray721.Length; i++)
+                    {
+                        TokenRewardData[] tokenRewards = null;
+
+                        var contract = JSON.Parse(contractArray721[i]);
+
+                        if (contract != null)
+                        {
+                            string newTokenRewards = UnwrapJson(contract["nfts"].ToString());
+                            string[] tokenArray = ReturnArrayJson(newTokenRewards);
+                            tokenRewards = new TokenRewardData[tokenArray.Length];
+
+                            for (int r = 0; r < tokenArray.Length; r++)
+                            {
+                                var token = JSON.Parse(tokenArray[r]);
+
+                                tokenRewards[r] = new TokenRewardData(token["name"],
+                                    token["description"],
+                                    token["image"],
+                                    token["id"],
+                                    token["tokenId"],
+                                    token["owner"],
+                                    token["ownerName"],
+                                    token["contract"],
+                                    token["contractName"],
+                                    token["contractFriendlyName"],
+                                    token["gameId"],
+                                    token["gameName"],
+                                    token["comission"],
+                                    token["providerId"],
+                                    token["providerName"],
+                                    token["minted"]
+                                    );
+                            }
+                        }
+                        erc721[i] = new Erc721ContractsData(contract["symbol"],
+                            contract["friendlyName"],
+                            contract["name"],
+                            contract["address"],
+                            tokenRewards
+                            );
+                    }
                 }
 
-                erc20[i] = new Erc20ContractsData(contract["symbol"],
-                    contract["friendlyName"],
-                    contract["name"],
-                    contract["address"],
-                    tokenData
+                if (root["erc20Contracts"] != null)
+                {
+                    string new20Contracts = UnwrapJson(root["erc20Contracts"].ToString());
+                    string[] contractArray20 = ReturnArrayJson(new20Contracts);
+                    erc20 = new Erc20ContractsData[contractArray20.Length];
+
+                    for (int i = 0; i < contractArray20.Length; i++)
+                    {
+                        Erc20Token[] tokenData = null;
+                        var contract = JSON.Parse(contractArray20[i]);
+
+                        if (contract != null)
+                        {
+                            string newToken = UnwrapJson(contract["token"].ToString());
+                            string[] tokenArray = ReturnArrayJson(newToken);
+                            tokenData = new Erc20Token[tokenArray.Length];
+
+                            for (int r = 0; r < tokenArray.Length; r++)
+                            {
+                                var token = JSON.Parse(tokenArray[r]);
+
+                                tokenData[r] = new Erc20Token(token["contractId"],
+                                    token["userId"],
+                                    token["value"],
+                                    token["sequence"],
+                                    token["canClaim"],
+                                    token["pendingValue"],
+                                    token["pendingSequence"]
+                                    );
+                            }
+                        }
+                        
+                        erc20[i] = new Erc20ContractsData(contract["symbol"],
+                            contract["friendlyName"],
+                            contract["name"],
+                            contract["address"],
+                            tokenData
+                            );
+                    }
+                }
+
+                userRewards = new UserNotMintedData(root["name"],
+                    root["commision"],
+                    root["provider"],
+                    erc721,
+                    erc20
                     );
             }
-
-            userRewards = new UserNotMintedData(root["name"],
-                root["commision"], 
-                root["provider"],
-                erc721,
-                erc20
-                );
-
             hasRewardsUpdated = true;
             CheckIfBothObjectsWereUpdated();
         }
@@ -231,18 +295,42 @@ namespace Tokenage
             for (int i = 0; i < collections.Count; i++)
             {
                 value.Add(new List<CollectionItem>());
-                for (int j = 0; j < userRewards.erc721Contracts.Length; j++)
+                if (userRewards.erc721Contracts != null)
                 {
-                    if (userRewards.erc721Contracts[j].address == collections[i].Contract)
+                    for (int j = 0; j < userRewards.erc721Contracts.Length; j++)
                     {
-                        for (int r = 0; r < collections[i].Items.Count; r++)
+                        if (userRewards.erc721Contracts[j].address == collections[i].Contract)
                         {
-                            for (int k = 0; k < userRewards.erc721Contracts[j].nft.Length; k++)
+                            for (int r = 0; r < collections[i].Items.Count; r++)
                             {
-                                if (userRewards.erc721Contracts[j].nft[k].id == collections[i].Items[r].Id)
+                                for (int k = 0; k < userRewards.erc721Contracts[j].nft.Length; k++)
                                 {
-                                    if (value[i].Contains(collections[i].Items[r])) continue;
-                                    value[i].Add(collections[i].Items[r]);
+                                    if (userRewards.erc721Contracts[j].nft[k].id == collections[i].Items[r].Id)
+                                    {
+                                        if (value[i].Contains(collections[i].Items[r])) continue;
+                                        value[i].Add(collections[i].Items[r]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (userNFT.contracts != null)
+                {
+                    for (int j = 0; j < userNFT.contracts.Length; j++)
+                    {
+                        if (userNFT.contracts[j].address == collections[i].Contract)
+                        {
+                            for (int r = 0; r < collections[i].Items.Count; r++)
+                            {
+                                for (int k = 0; k < userNFT.contracts[j].nfts.Length; k++)
+                                {
+                                    if (userNFT.contracts[j].nfts[k].id == collections[i].Items[r].Id)
+                                    {
+                                        if (value[i].Contains(collections[i].Items[r])) continue;
+                                        value[i].Add(collections[i].Items[r]);
+                                    }
                                 }
                             }
                         }
