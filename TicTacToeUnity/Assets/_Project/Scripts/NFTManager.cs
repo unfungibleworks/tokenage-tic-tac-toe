@@ -188,7 +188,7 @@ namespace Tokenage
 
                         var contract = JSON.Parse(contractArray721[i]);
 
-                        if (contract != null)
+                        if (contract["nfts"] != null)
                         {
                             string newTokenRewards = UnwrapJson(contract["nfts"].ToString());
                             string[] tokenArray = ReturnArrayJson(newTokenRewards);
@@ -237,7 +237,7 @@ namespace Tokenage
                         Erc20Token[] tokenData = null;
                         var contract = JSON.Parse(contractArray20[i]);
 
-                        if (contract != null)
+                        if (contract["token"] != null)
                         {
                             string newToken = UnwrapJson(contract["token"].ToString());
                             string[] tokenArray = ReturnArrayJson(newToken);
