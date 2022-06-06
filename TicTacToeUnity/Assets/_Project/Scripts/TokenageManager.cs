@@ -11,6 +11,8 @@ namespace Tokenage
     public class TokenageManager : MonoBehaviour
     {
         static TokenageManager instance;
+        static String API_URL = "http://localhost:3001/api/v1"; // localhost API URL
+        // static String API_URL = "https://api.tokenage.io/v1"; // tokenage demo server API URL
 
         public static TokenageManager GetInstance()
         {
@@ -25,12 +27,12 @@ namespace Tokenage
         #region Get Requests
         public void UserNFTsRequest(Action<bool> callback)
         {
-            StartCoroutine(GetUserNFTsRequest("https://api.tokenage.io/v1/users/" + AccountManager.GetInstance().Wallet + "/assets", callback,
+            StartCoroutine(GetUserNFTsRequest(API_URL + "/users/" + AccountManager.GetInstance().Wallet + "/assets", callback,
                 (string returnValue) =>
                 {
                     if (returnValue != string.Empty) NFTManager.GetInstance().SetRewards(returnValue);
                 }));
-            StartCoroutine(GetUserNFTsRequest("https://api.tokenage.io/v1/users/" + AccountManager.GetInstance().Wallet + "/nfts", callback,
+            StartCoroutine(GetUserNFTsRequest(API_URL + "/users/" + AccountManager.GetInstance().Wallet + "/nfts", callback,
                 (string returnValue) =>
                 {
                     if (returnValue != string.Empty) NFTManager.GetInstance().SetNFT(returnValue);
@@ -74,7 +76,7 @@ namespace Tokenage
 
             string bodyJsonString = JsonUtility.ToJson(data);
 
-            StartCoroutine(PostRequest(bodyJsonString, "https://api.tokenage.io/v1/assets"));
+            StartCoroutine(PostRequest(bodyJsonString, API_URL + "/assets"));
         }
 
         public void CUTILRewardRequest(int amount)
@@ -86,7 +88,7 @@ namespace Tokenage
 
             string bodyJsonString = JsonUtility.ToJson(data);
 
-            StartCoroutine(PostRequest(bodyJsonString, "https://api.tokenage.io/v1/assets/tokens"));
+            StartCoroutine(PostRequest(bodyJsonString, API_URL + "/assets/tokens"));
         }
 
         IEnumerator PostRequest(string data, string url)
@@ -107,7 +109,7 @@ namespace Tokenage
 
             string bodyJsonString = JsonUtility.ToJson(data);
 
-            StartCoroutine(GetUserDataRequest(bodyJsonString, "https://api.tokenage.io/v1/users/login", callback));
+            StartCoroutine(GetUserDataRequest(bodyJsonString, API_URL + "/users/login", callback));
         }
 
         IEnumerator GetUserDataRequest(string data, string url, Action<bool> callback)
