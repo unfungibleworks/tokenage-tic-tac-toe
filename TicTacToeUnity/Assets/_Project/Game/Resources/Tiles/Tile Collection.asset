@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b4e5cb6ddf24b49acf3b5b0acbdfc2, type: 3}
   m_Name: Tile Collection
   m_EditorClassIdentifier: 
-  Contract: 0x9f9Fee352F1e2E7E4e6972fa4c28EE915d4a6a12
+  Contract: 0x4826533B4897376654Bb4d4AD88B7faFD0C98528
   Items:
   - {fileID: 11400000, guid: 4837d9055f5d9584d8d144d5b1fe7be4, type: 2}
   - {fileID: 11400000, guid: c7f29eb9791f6f149815f2e6ee594cd4, type: 2}

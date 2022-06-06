@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameId: 0
   gameName: Tic Tac Toe
-  ERC20Contract: 0x820Af5eEe30A68A1378646Be129977372939CA17
+  ERC20Contract: 0x0E801D84Fa97b50751Dbf25036d067dCf18858bF
