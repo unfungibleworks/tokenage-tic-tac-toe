@@ -83,7 +83,7 @@ namespace Tokenage
         {
             ClientUtilityTokenData data = new ClientUtilityTokenData(
                 AccountManager.GetInstance().Email,
-                TokenageGameSettings.GetOrCreateSettings().ReturnERC20Contract(),
+                TokenageSettingsManager.Instance.tokenageGameSettings.ReturnERC20Contract(),
                 amount.ToString());
 
             string bodyJsonString = JsonUtility.ToJson(data);
