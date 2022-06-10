@@ -7,9 +7,9 @@ using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 
 // Create a new type of Settings Asset.
-class TokenageGameSettings : ScriptableObject
+public class TokenageGameSettings : ScriptableObject
 {
-    public const string tokenageGameSettingsPath = "Assets/Editor/TokenageGameSettings.asset";
+    public const string tokenageGameSettingsPath = "Assets/TokenageGameSettings.asset";
 
     [SerializeField]
     private int gameId;
@@ -19,6 +19,8 @@ class TokenageGameSettings : ScriptableObject
 
     [SerializeField]
     private string ERC20Contract;
+
+#if UNITY_EDITOR
 
     internal static TokenageGameSettings GetOrCreateSettings()
     {
@@ -39,6 +41,7 @@ class TokenageGameSettings : ScriptableObject
     {
         return new SerializedObject(GetOrCreateSettings());
     }
+#endif
 
     public int ReturnGameID()
     {
@@ -59,6 +62,7 @@ class TokenageGameSettings : ScriptableObject
 // Register a SettingsProvider using IMGUI for the drawing framework:
 static class MyCustomSettingsIMGUIRegister
 {
+#if UNITY_EDITOR
     [SettingsProvider]
     public static SettingsProvider CreateTokenageGameSettingsProvider()
     {
@@ -84,4 +88,5 @@ static class MyCustomSettingsIMGUIRegister
 
         return provider;
     }
+#endif
 }
