@@ -42,6 +42,7 @@ namespace Tokenage
             var request = new UnityWebRequest(url, "Get");
             request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Authorization", "Bearer cc26d6b1084edd81ca957e3c2075d36865ff2ee9751981359df5cc23e2c0435f");
             yield return request.SendWebRequest();
 
             Debug.Log("Result: " + request.result);
@@ -79,7 +80,7 @@ namespace Tokenage
 
         public void CUTILRewardRequest(int amount)
         {
-            ClientUtilityTokenData data = new ClientUtilityTokenData(
+                ClientUtilityTokenData data = new ClientUtilityTokenData(
                 AccountManager.GetInstance().Email,
                 TokenageSettingsManager.Instance.tokenageGameSettings.ReturnERC20Contract(),
                 amount.ToString());
@@ -96,6 +97,7 @@ namespace Tokenage
             request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Authorization", "Bearer cc26d6b1084edd81ca957e3c2075d36865ff2ee9751981359df5cc23e2c0435f");
             yield return request.SendWebRequest();
             Debug.Log("Result: " + request.result);
             Debug.Log("Status Code: " + request.responseCode);
